@@ -1,0 +1,34 @@
+
+=========================================== extensions ===========================================
+
+----------------------------------- For BROWSER ------------------------------------
+add json formatter extension to your browser to get formatted json on it
+
+
+----------------------------------- For VS CODE ------------------------------------
+Material Icon Theme ---------------- for good looking sidebar
+Prettier- Code formatter ------------- for better visibilty of ciode
+Error Lens --------------------------- for better error showing
+
+------------------------ SERVER SIDE ----------------------------------------------
+
+// To install http express mongos
+npm i http express mongos
+
+
+// Dev dependency for hot reload ------ --save-dev to install as dev dependency
+npm i nodemon --save-dev
+
+change in script --- package.json file
+"scripts": {
+    "start": "node ./index.js",
+    "dev": "nodemon ./index.js"
+  },
+
+by this now we can simple run our server by the below command
+npm run start ---------------------- to start a normal server
+npm run dev ------------------------- to start server through nodemon by which we can perform hot reload
+
+
+
+
