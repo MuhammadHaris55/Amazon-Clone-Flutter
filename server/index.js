@@ -1,19 +1,30 @@
-console.log("install dependencies")
-
+//IMPORTS FROM PACKAGES
 const express = require("express");
+const mongoose = require("mongoose");
 
+//IMPORTS FROM OTHER FILES
+const authRouter = require('./routes/auth');
+
+//INIT
 const PORT = 3000;
 const app = express();
+const DB = 'mongodb+srv://Haris:devharis55@cluster0.csoejyp.mongodb.net/?retryWrites=true&w=majority';
 
-app.get("/hello-world", (req, res) => {
-    res.send({hi: "hello world"});
+
+//middleware
+app.use(express.json());
+app.use(authRouter);
+
+//CONNECTIONS
+
+mongoose.connect(DB).then(() => {
+    console.log("DB successfully connected");
+}).catch((e) => {
+    console.log(e);
 });
-
-app.get("/", (req, res) => {
-    res.send({"name": "Muhammad Haris"});
-})
-
 
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`connected at port ${PORT}`);
 })
+
+

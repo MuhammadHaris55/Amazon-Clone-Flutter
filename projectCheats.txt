@@ -6,9 +6,9 @@ add json formatter extension to your browser to get formatted json on it
 
 
 ----------------------------------- For VS CODE ------------------------------------
-Material Icon Theme ---------------- for good looking sidebar
-Prettier- Code formatter ------------- for better visibilty of ciode
-Error Lens --------------------------- for better error showing
+Material Icon Theme ----- Philipp Kief----------- for good looking sidebar
+Prettier- Code formatter ---- Prettier --------- for better visibilty of ciode
+Error Lens ---- Alexander----------------------- for better error showing
 
 ------------------------ SERVER SIDE ----------------------------------------------
 
