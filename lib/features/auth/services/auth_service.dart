@@ -1,12 +1,50 @@
-// class AuthService {
+import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 
-//   void signup ({
-//     required name,
-//     required email,
-//     required password,
-//   })
-// }
+import 'package:amazon_clone/constants/error_handling.dart';
+import 'package:amazon_clone/constants/utils.dart';
 
+import '../../../constants/global_variables.dart';
+import '../../../models/user.dart';
 
-// Need to import bycrptjs and hashed the password
-// then goto client side and connect the UI with server by implementing service or http etc
+class AuthService {
+// sign up user
+  void signUpUser({
+    required BuildContext context,
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    try {
+      User user = User(
+        id: '',
+        name: name,
+        email: email,
+        password: password,
+        address: '',
+        type: '',
+        token: '',
+      );
+
+      http.Response res = await http.post(
+        Uri.parse('$uri/api/signup'),
+        body: user.toJson(),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () {
+            showSnackBar(
+              context,
+              'Account created! Login with the same credential',
+            );
+          });
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+}
