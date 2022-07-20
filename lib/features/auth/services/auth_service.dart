@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
@@ -43,6 +45,40 @@ class AuthService {
               'Account created! Login with the same credential',
             );
           });
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  // sign in user
+  void signInUser({
+    required BuildContext context,
+    required String email,
+    required String password,
+  }) async {
+    try {
+
+      http.Response res = await http.post(
+        Uri.parse('$uri/api/signin'),
+        body: jsonEncode({
+          'email': email,
+          'password': password,
+        }),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      print(res.body);
+      httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () {
+            showSnackBar(
+              context,
+              'Account created! Login with the same credential',
+            );
+          }
+          );
     } catch (e) {
       showSnackBar(context, e.toString());
     }

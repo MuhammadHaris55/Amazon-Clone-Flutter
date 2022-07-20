@@ -21,7 +21,7 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   Auth _auth = Auth.signup;
   final _signUpFormKey = GlobalKey<FormState>();
-  final _signinFormKey = GlobalKey<FormState>();
+  final _signInFormKey = GlobalKey<FormState>();
 
   final AuthService authService = AuthService();
   final TextEditingController _nameController = TextEditingController();
@@ -32,6 +32,14 @@ class _AuthScreenState extends State<AuthScreen> {
     authService.signUpUser(
       context: context,
       name: _nameController.text,
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+  }
+
+  void signInUser() {
+    authService.signInUser(
+      context: context,
       email: _emailController.text,
       password: _passwordController.text,
     );
@@ -139,7 +147,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   padding: const EdgeInsets.all(8.0),
                   color: GlobalVariables.backgroundColor,
                   child: Form(
-                    key: _signinFormKey,
+                    key: _signInFormKey,
                     child: Column(
                       children: [
                         CustomTextField(
@@ -153,7 +161,14 @@ class _AuthScreenState extends State<AuthScreen> {
                         const SizedBox(
                           height: 10.0,
                         ),
-                        CustomButton(text: 'SignUp', onTap: () {}),
+                        CustomButton(
+                          text: 'SignUp', 
+                          onTap: () {
+                            if (_signInFormKey.currentState!.validate()) {
+                              signInUser();
+                            }
+                          },
+                          ),
                       ],
                     ),
                   ),
