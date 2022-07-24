@@ -10,7 +10,7 @@ enum Auth {
 }
 
 class AuthScreen extends StatefulWidget {
-  static const routeNamed = '/auth-screen';
+  static const routeName = '/auth-screen';
 
   const AuthScreen({Key? key}) : super(key: key);
 
@@ -27,6 +27,14 @@ class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _nameController.dispose();
+  }
 
   void signUpUser() {
     authService.signUpUser(
@@ -51,7 +59,7 @@ class _AuthScreenState extends State<AuthScreen> {
       backgroundColor: GlobalVariables.greyBackgroundCOlor,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
               const Text(
@@ -162,13 +170,13 @@ class _AuthScreenState extends State<AuthScreen> {
                           height: 10.0,
                         ),
                         CustomButton(
-                          text: 'SignUp', 
+                          text: 'SignIn',
                           onTap: () {
                             if (_signInFormKey.currentState!.validate()) {
                               signInUser();
                             }
                           },
-                          ),
+                        ),
                       ],
                     ),
                   ),
