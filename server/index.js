@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 
 //IMPORTS FROM OTHER FILES
+const adminRouter = require("./routes/admin");
 const authRouter = require('./routes/auth');
 
 //INIT
@@ -14,6 +15,7 @@ const DB = 'mongodb+srv://Haris:devharis55@cluster0.csoejyp.mongodb.net/?retryWr
 //middleware
 app.use(express.json());
 app.use(authRouter);
+app.use(adminRouter);
 
 //CONNECTIONS
 

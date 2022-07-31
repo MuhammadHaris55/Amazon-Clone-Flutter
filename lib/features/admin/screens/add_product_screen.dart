@@ -1,5 +1,13 @@
+import 'dart:io';
+
+import 'package:amazon_clone/common/widgets/custom_button.dart';
 import 'package:amazon_clone/common/widgets/custom_textfield.dart';
 import 'package:amazon_clone/constants/global_variables.dart';
+import 'package:amazon_clone/constants/utils.dart';
+import 'package:amazon_clone/features/admin/services/admin_services.dart';
+import 'package:amazon_clone/features/auth/screens/auth_screen.dart';
+import 'package:amazon_clone/features/auth/services/auth_service.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +25,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController priceController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
 
+  final AdminServices adminServices = AdminServices();
+  final _addProductFormKey = GlobalKey<FormState>();
+
+  String category = 'Mobiles';
+  List<File> images = [];
+
   @override
   void dispose() {
     super.dispose();
@@ -24,6 +38,35 @@ class _AddProductScreenState extends State<AddProductScreen> {
     descriptionController.dispose();
     priceController.dispose();
     quantityController.dispose();
+  }
+
+  List<String> productCategory = [
+    'Mobiles',
+    'Essentials',
+    'Appliances',
+    'Books',
+    'Fashion',
+  ];
+
+  void sellProduct() {
+    if (_addProductFormKey.currentState!.validate() || images.isNotEmpty) {
+      adminServices.sellProduct(
+        context: context,
+        name: productNameController.text,
+        description: descriptionController.text,
+        price: double.parse(priceController.text),
+        quantity: double.parse(quantityController.text),
+        category: category,
+        images: images,
+      );
+    }
+  }
+
+  void selectImages() async {
+    var res = await pickImages();
+    setState(() {
+      images = res;
+    });
   }
 
   @override
@@ -49,6 +92,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       ),
       body: SingleChildScrollView(
         child: Form(
+          key: _addProductFormKey,
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 10.0,
@@ -56,39 +100,99 @@ class _AddProductScreenState extends State<AddProductScreen> {
             child: Column(
               children: [
                 const SizedBox(height: 10.0),
-                DottedBorder(
-                  borderType: BorderType.RRect,
-                  radius: const Radius.circular(10.0),
-                  dashPattern: const [10.0, 4.0],
-                  strokeCap: StrokeCap.round,
-                  child: Container(
-                    width: double.infinity,
-                    height: 150.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.folder_open,
-                          size: 40.0,
+                images.isNotEmpty
+                    ? CarouselSlider(
+                        items: images.map(
+                          (i) {
+                            return Builder(
+                              builder: (BuildContext context) => Image.file(
+                                i,
+                                fit: BoxFit.cover,
+                                height: 200.0,
+                              ),
+                            );
+                          },
+                        ).toList(),
+                        options: CarouselOptions(
+                          viewportFraction: 1,
+                          height: 200.0,
                         ),
-                        Text(
-                          'Select Products Images',
-                          style: TextStyle(
-                            fontSize: 15.0,
-                            color: Colors.grey.shade400,
+                      )
+                    : GestureDetector(
+                        onTap: selectImages,
+                        child: DottedBorder(
+                          borderType: BorderType.RRect,
+                          radius: const Radius.circular(10.0),
+                          dashPattern: const [10.0, 4.0],
+                          strokeCap: StrokeCap.round,
+                          child: Container(
+                            width: double.infinity,
+                            height: 150.0,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.folder_open,
+                                  size: 40.0,
+                                ),
+                                Text(
+                                  'Select Products Images',
+                                  style: TextStyle(
+                                    fontSize: 15.0,
+                                    color: Colors.grey.shade400,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
                 const SizedBox(height: 30.0),
                 CustomTextField(
                   controller: productNameController,
                   hintText: 'Product Name',
+                ),
+                const SizedBox(height: 10.0),
+                CustomTextField(
+                  controller: descriptionController,
+                  hintText: 'Description',
+                  maxLines: 5,
+                ),
+                const SizedBox(height: 10.0),
+                CustomTextField(
+                  controller: priceController,
+                  hintText: 'Price',
+                ),
+                const SizedBox(height: 10.0),
+                CustomTextField(
+                  controller: quantityController,
+                  hintText: 'Quantity',
+                ),
+                const SizedBox(height: 10.0),
+                SizedBox(
+                  width: double.infinity,
+                  child: DropdownButton(
+                      value: category,
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      items: productCategory.map((String item) {
+                        return DropdownMenuItem(
+                          value: item,
+                          child: Text(item),
+                        );
+                      }).toList(),
+                      onChanged: (String? newVal) {
+                        setState(() {
+                          category = newVal!;
+                        });
+                      }),
+                ),
+                const SizedBox(height: 10.0),
+                CustomButton(
+                  text: 'Sell',
+                  onTap: sellProduct,
                 ),
               ],
             ),
